@@ -20,6 +20,8 @@
             --bg-color: #121212;
             --text-color: #ffffff;
             --card-bg: #1e1e1e;
+            --danger-color: #ff5252;
+            --warning-color: #ffab40;
         }
 
         body {
@@ -57,25 +59,50 @@
         /* Status Section */
         #status-panel {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             padding: 15px;
             background: var(--card-bg);
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
-        h1 { margin: 0 0 10px 0; font-size: 1.2rem; opacity: 0.8; }
+        h1 { margin: 0 0 5px 0; font-size: 1rem; opacity: 0.8; }
         
         #next-dose-time {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: bold;
-            margin: 10px 0;
+            margin: 5px 0;
             color: #4caf50;
         }
         
         .wait-text { color: #ff9800 !important; }
 
         #recommendation { font-size: 1.1rem; font-weight: 500; }
+
+        /* Daily Totals Section */
+        #daily-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .stat-val { font-size: 1.1rem; font-weight: bold; display: block; margin-top: 4px; }
+        .stat-ibu { color: var(--ibu-color); }
+        .stat-aceta { color: var(--aceta-color); }
+        
+        /* Dynamic safety colors */
+        .safe { opacity: 1; }
+        .warning { color: var(--warning-color); }
+        .danger { color: var(--danger-color); }
 
         /* Buttons Section */
         .button-container {
@@ -88,15 +115,14 @@
         button {
             border: none;
             border-radius: 12px;
-            padding: 30px 10px;
-            font-size: 1.2rem;
+            padding: 25px 5px;
+            font-size: 1.1rem;
             font-weight: bold;
             color: white;
             cursor: pointer;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            line-height: 1.4;
         }
-
-        button:disabled { opacity: 0.5; }
 
         #btn-ibu { background-color: var(--ibu-color); }
         #btn-aceta { background-color: var(--aceta-color); }
@@ -154,9 +180,20 @@
         <div id="recommendation">Checking history...</div>
     </div>
 
+    <div id="daily-stats">
+        <div class="stat-card">
+            <span>Daily Ibuprofen</span>
+            <span class="stat-val stat-ibu" id="daily-ibu-val">0 / 3200 mg</span>
+        </div>
+        <div class="stat-card">
+            <span>Daily Acetamin.</span>
+            <span class="stat-val stat-aceta" id="daily-aceta-val">0 / 4000 mg</span>
+        </div>
+    </div>
+
     <div class="button-container">
         <button id="btn-ibu" onclick="sendAction('add', 'Ibuprofen')">Ibuprofen<br>(600mg)</button>
-        <button id="btn-aceta" onclick="sendAction('add', 'Acetaminophen')">Acetaminophen<br>(600mg)</button>
+        <button id="btn-aceta" onclick="sendAction('add', 'Acetaminophen')">Acetaminophen<br>(1000mg)</button>
     </div>
 
     <div class="log-header-container">
@@ -168,8 +205,17 @@
     <div class="refresh-hint">Data pulls from Google Sheets</div>
 
     <script>
-        // PASTE YOUR GOOGLE WEB APP URL HERE
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzPMUbqEbgPnCjnmwjcs-p7CZk0N4zSm9xYjVRPugQqDqIHVMgtIv2rsPCNxEZdmO8Q2Q/exec'; 
+        // --- PASTE YOUR GOOGLE SCRIPT URL HERE ---
+        const SCRIPT_URL = 'PASTE_YOUR_URL_HERE'; 
+        // ------------------------------------------
+
+        // Configuration for dosages
+        const DOSE_IBU = 600;
+        const DOSE_ACETA = 1000;
+        
+        // Limits (Prescription Max)
+        const LIMIT_IBU = 3200; 
+        const LIMIT_ACETA = 4000;
 
         let logs = [];
 
@@ -179,18 +225,12 @@
 
         function init() {
             fetchData();
-            // Auto-refresh every 60 seconds
-            setInterval(fetchData, 60000);
-            // Update the timer countdown every 10 seconds (no network call needed)
+            setInterval(fetchData, 60000); 
             setInterval(updateStatus, 10000);
         }
 
         function fetchData() {
-            // "read" isn't a specific action in the script, 
-            // but calling the URL without parameters returns the list anyway.
-            // We use 'read' just to be explicit if we expand later.
             const url = `${SCRIPT_URL}?action=read`;
-            
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
@@ -205,14 +245,11 @@
 
         function sendAction(action, med = '') {
             showLoader(true);
-            // We use standard GET requests for simplicity to avoid CORS preflight issues 
-            // on some browsers with simple scripts.
             const url = `${SCRIPT_URL}?action=${action}&med=${med}`;
-
             fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    logs = data; // The script returns the updated list
+                    logs = data;
                     render();
                     showLoader(false);
                 })
@@ -223,23 +260,33 @@
                 });
         }
 
+        function isToday(timestamp) {
+            const date = new Date(Number(timestamp));
+            const today = new Date();
+            return date.getDate() === today.getDate() &&
+                   date.getMonth() === today.getMonth() &&
+                   date.getFullYear() === today.getFullYear();
+        }
+
         function formatTime(timestamp) {
             const date = new Date(Number(timestamp));
             return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
 
         function formatDay(timestamp) {
+            if (isToday(timestamp)) return "Today";
             const date = new Date(Number(timestamp));
-            const today = new Date();
-            if (date.getDate() === today.getDate()) return "Today";
             return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
         }
 
         function render() {
             const list = document.getElementById('log-list');
             list.innerHTML = '';
+            
+            let dailyIbuCount = 0;
+            let dailyAcetaCount = 0;
 
-            // 1. Render List
+            // 1. Render List & Calculate Totals
             logs.forEach(log => {
                 const li = document.createElement('li');
                 li.className = 'log-item';
@@ -250,10 +297,40 @@
                     <span class="log-time">${formatDay(log.time)} ${formatTime(log.time)}</span>
                 `;
                 list.appendChild(li);
+
+                // Calculate Totals (Only if it's today)
+                if (isToday(log.time)) {
+                    if (log.med === 'Ibuprofen') dailyIbuCount++;
+                    if (log.med === 'Acetaminophen') dailyAcetaCount++;
+                }
             });
 
-            // 2. Update Status Logic
+            // 2. Update Daily Stats UI
+            const totalIbu = dailyIbuCount * DOSE_IBU;
+            const totalAceta = dailyAcetaCount * DOSE_ACETA;
+
+            updateStat('daily-ibu-val', totalIbu, LIMIT_IBU);
+            updateStat('daily-aceta-val', totalAceta, LIMIT_ACETA);
+
+            // 3. Update Timer Logic
             updateStatus();
+        }
+
+        function updateStat(elementId, current, limit) {
+            const el = document.getElementById(elementId);
+            el.innerText = `${current} / ${limit} mg`;
+            
+            el.className = 'stat-val'; // reset
+            
+            // Logic: 75% = Warning, 100% = Danger
+            if (current >= limit) {
+                el.classList.add('danger');
+            } else if (current >= (limit * 0.75)) {
+                el.classList.add('warning');
+            } else {
+                if (elementId.includes('ibu')) el.classList.add('stat-ibu');
+                if (elementId.includes('aceta')) el.classList.add('stat-aceta');
+            }
         }
 
         function updateStatus() {
@@ -273,7 +350,6 @@
             const lastTime = Number(lastLog.time);
             const nextTime = lastTime + (3 * 60 * 60 * 1000); // 3 hours
             const now = Date.now();
-
             const nextMed = lastLog.med === 'Ibuprofen' ? 'Acetaminophen' : 'Ibuprofen';
 
             if (now >= nextTime) {
@@ -294,15 +370,14 @@
             }
         }
 
-        init();
-    </script>
-    <script>
-        // Register Service Worker for PWA support
+        // Service Worker for PWA
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('./sw.js')
                 .then(() => console.log('Service Worker Registered'))
                 .catch((error) => console.log('Service Worker Registration Failed:', error));
         }
+
+        init();
     </script>
 </body>
 </html>
