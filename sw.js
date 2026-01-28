@@ -4,7 +4,7 @@ const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon.jpg'
+  './icon.png'
 ];
 
 // Install: Cache new files
