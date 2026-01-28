@@ -160,7 +160,7 @@
     </div>
 
     <div class="log-header-container">
-        <span>History (Syncs w/ Wife)</span>
+        <span>History</span>
         <button id="btn-undo" onclick="sendAction('undo')">Undo Last</button>
     </div>
 
@@ -179,7 +179,7 @@
 
         function init() {
             fetchData();
-            // Auto-refresh every 60 seconds so you see if your wife added something
+            // Auto-refresh every 60 seconds
             setInterval(fetchData, 60000);
             // Update the timer countdown every 10 seconds (no network call needed)
             setInterval(updateStatus, 10000);
