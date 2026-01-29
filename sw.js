@@ -1,5 +1,5 @@
 // UPDATED: Version v2
-const CACHE_NAME = 'pain-tracker-v4'; 
+const CACHE_NAME = 'pain-tracker-v5'; 
 const ASSETS = [
   './',
   './index.html',
