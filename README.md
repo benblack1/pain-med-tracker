@@ -14,11 +14,12 @@ Add to Home Screen: Functions like a native app when added to the home screen (P
 
 ## Setup Instructions
 Part 1: The Database (Google Sheets)
+
 Create a new Google Sheet.
 
 Go to Extensions > Apps Script.
 
-Paste the Google Apps Script code (found in google-script.js or the project documentation).
+Paste the Google Apps Script code (found in google-script.js).
 
 Click Deploy > New Deployment.
 
