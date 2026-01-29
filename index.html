@@ -22,6 +22,7 @@
             --card-bg: #1e1e1e;
             --danger-color: #ff5252;
             --warning-color: #ffab40;
+            --sync-color: #4caf50;
         }
 
         body {
@@ -36,26 +37,6 @@
             box-sizing: border-box;
         }
 
-        /* Loading Overlay */
-        #loader {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            visibility: hidden;
-        }
-        .spinner {
-            width: 40px; height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         /* Status Section */
         #status-panel {
             text-align: center;
@@ -64,7 +45,24 @@
             background: var(--card-bg);
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            position: relative;
         }
+
+        /* Sync Indicator */
+        #sync-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #555; /* Gray = Unknown */
+        }
+        .status-online { background-color: var(--sync-color) !important; box-shadow: 0 0 8px var(--sync-color); }
+        .status-offline { background-color: var(--danger-color) !important; }
+        .status-syncing { background-color: var(--warning-color) !important; animation: blink 1s infinite; }
+
+        @keyframes blink { 50% { opacity: 0.5; } }
 
         h1 { margin: 0 0 5px 0; font-size: 1rem; opacity: 0.8; }
         
@@ -76,7 +74,6 @@
         }
         
         .wait-text { color: #ff9800 !important; }
-
         #recommendation { font-size: 1.1rem; font-weight: 500; }
 
         /* Daily Totals Section */
@@ -98,8 +95,6 @@
         .stat-val { font-size: 1.1rem; font-weight: bold; display: block; margin-top: 4px; }
         .stat-ibu { color: var(--ibu-color); }
         .stat-aceta { color: var(--aceta-color); }
-        
-        /* Dynamic safety colors */
         .safe { opacity: 1; }
         .warning { color: var(--warning-color); }
         .danger { color: var(--danger-color); }
@@ -123,6 +118,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             line-height: 1.4;
         }
+        button:active { transform: scale(0.96); }
 
         #btn-ibu { background-color: var(--ibu-color); }
         #btn-aceta { background-color: var(--aceta-color); }
@@ -161,6 +157,8 @@
             border-bottom: 1px solid #333;
             font-size: 1rem;
         }
+        
+        .pending-item { opacity: 0.5; font-style: italic; } /* Visual style for offline logs */
 
         .log-med { font-weight: bold; }
         .log-ibu { color: var(--ibu-color); }
@@ -172,9 +170,8 @@
 </head>
 <body>
 
-    <div id="loader"><div class="spinner"></div></div>
-
     <div id="status-panel">
+        <div id="sync-badge" title="Status"></div>
         <h1 id="status-title">Loading...</h1>
         <div id="next-dose-time">--:--</div>
         <div id="recommendation">Checking history...</div>
@@ -186,78 +183,170 @@
             <span class="stat-val stat-ibu" id="daily-ibu-val">0 / 3200 mg</span>
         </div>
         <div class="stat-card">
-            <span>Daily Acetamin</span>
+            <span>Daily Acetamin.</span>
             <span class="stat-val stat-aceta" id="daily-aceta-val">0 / 4000 mg</span>
         </div>
     </div>
 
     <div class="button-container">
-        <button id="btn-ibu" onclick="sendAction('add', 'Ibuprofen')">Ibuprofen<br>(600mg)</button>
-        <button id="btn-aceta" onclick="sendAction('add', 'Acetaminophen')">Acetaminophen<br>(1000mg)</button>
+        <button id="btn-ibu" onclick="queueAction('add', 'Ibuprofen')">Ibuprofen<br>(600mg)</button>
+        <button id="btn-aceta" onclick="queueAction('add', 'Acetaminophen')">Acetaminophen<br>(1000mg)</button>
     </div>
 
     <div class="log-header-container">
         <span>History</span>
-        <button id="btn-undo" onclick="sendAction('undo')">Undo Last</button>
+        <button id="btn-undo" onclick="queueAction('undo')">Undo Last</button>
     </div>
 
     <ul id="log-list"></ul>
-    <div class="refresh-hint">Data pulls from Google Sheets</div>
+    <div class="refresh-hint" id="sync-text">Loading...</div>
 
     <script>
         // --- PASTE YOUR GOOGLE SCRIPT URL HERE ---
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzPMUbqEbgPnCjnmwjcs-p7CZk0N4zSm9xYjVRPugQqDqIHVMgtIv2rsPCNxEZdmO8Q2Q/exec'; 
+        const SCRIPT_URL = 'PASTE_YOUR_URL_HERE'; 
         // ------------------------------------------
 
-        // Configuration for dosages
         const DOSE_IBU = 600;
         const DOSE_ACETA = 1000;
-        
-        // Limits (Prescription Max)
         const LIMIT_IBU = 3200; 
         const LIMIT_ACETA = 4000;
 
-        let logs = [];
-
-        function showLoader(show) {
-            document.getElementById('loader').style.visibility = show ? 'visible' : 'hidden';
-        }
+        // State
+        let logs = []; // The authoritative list
+        let queue = []; // Offline actions waiting to sync
+        let isSyncing = false;
 
         function init() {
-            fetchData();
+            // 1. Load from LocalStorage immediately (Instant load)
+            const cachedLogs = localStorage.getItem('pain_logs');
+            const cachedQueue = localStorage.getItem('pain_queue');
+            
+            if (cachedLogs) logs = JSON.parse(cachedLogs);
+            if (cachedQueue) queue = JSON.parse(cachedQueue);
+            
+            render();
+            updateSyncStatus('offline'); // Assume offline until proven otherwise
+
+            // 2. Start Sync Loops
+            // Try to pull fresh data every 60s
             setInterval(fetchData, 60000); 
-            setInterval(updateStatus, 10000);
+            // Try to push queue items every 5s
+            setInterval(processQueue, 5000); 
+            // Update timers every 10s
+            setInterval(updateStatus, 10000); 
+
+            // 3. Initial Fetch
+            fetchData();
+        }
+
+        // --- CORE LOGIC: Optimistic UI ---
+
+        function queueAction(action, med = '') {
+            const timestamp = Date.now();
+            
+            // Create a temporary object for the queue
+            const item = { action, med, timestamp };
+            
+            // 1. Update UI Immediately (Optimistic)
+            if (action === 'add') {
+                // Add to front of logs locally so user sees it instantly
+                logs.unshift({ med, time: timestamp, pending: true }); 
+            } else if (action === 'undo') {
+                // Remove first item locally
+                logs.shift();
+            }
+
+            // 2. Add to Queue
+            queue.push(item);
+            saveLocal();
+            render();
+
+            // 3. Trigger immediate sync attempt
+            processQueue(); 
+        }
+
+        // --- SYNC LOGIC ---
+
+        function processQueue() {
+            if (queue.length === 0 || isSyncing) return;
+            if (!navigator.onLine) {
+                updateSyncStatus('offline');
+                return;
+            }
+
+            isSyncing = true;
+            updateSyncStatus('syncing');
+
+            // Take the oldest item from the queue (FIFO)
+            const item = queue[0];
+            
+            // Construct URL with timestamp
+            const url = `${SCRIPT_URL}?action=${item.action}&med=${item.med}&passedTime=${item.timestamp}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    // Success! Remove item from queue
+                    queue.shift(); 
+                    saveLocal();
+
+                    // If queue is now empty, we can trust the server data
+                    if (queue.length === 0) {
+                        logs = data; 
+                        saveLocal();
+                        render();
+                        updateSyncStatus('online');
+                    } else {
+                        // If more items, trigger next process immediately
+                        processQueue();
+                    }
+                })
+                .catch(error => {
+                    console.error('Sync failed:', error);
+                    updateSyncStatus('offline');
+                })
+                .finally(() => {
+                    isSyncing = false;
+                });
         }
 
         function fetchData() {
-            const url = `${SCRIPT_URL}?action=read`;
-            fetch(url)
+            if (!navigator.onLine) return;
+            // Only fetch if queue is empty (otherwise we might overwrite local pending changes)
+            if (queue.length > 0) return;
+
+            fetch(`${SCRIPT_URL}?action=read`)
                 .then(response => response.json())
                 .then(data => {
                     logs = data;
+                    saveLocal();
                     render();
+                    updateSyncStatus('online');
                 })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('status-title').innerText = "Connection Error";
-                });
+                .catch(() => updateSyncStatus('offline'));
         }
 
-        function sendAction(action, med = '') {
-            showLoader(true);
-            const url = `${SCRIPT_URL}?action=${action}&med=${med}`;
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    logs = data;
-                    render();
-                    showLoader(false);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showLoader(false);
-                    alert("Failed to sync. Check internet.");
-                });
+        // --- HELPERS ---
+
+        function saveLocal() {
+            localStorage.setItem('pain_logs', JSON.stringify(logs));
+            localStorage.setItem('pain_queue', JSON.stringify(queue));
+        }
+
+        function updateSyncStatus(status) {
+            const badge = document.getElementById('sync-badge');
+            const text = document.getElementById('sync-text');
+            
+            if (status === 'online') {
+                badge.className = 'status-online';
+                text.innerText = 'Synced with Google Sheets';
+            } else if (status === 'syncing') {
+                badge.className = 'status-syncing';
+                text.innerText = 'Syncing...';
+            } else {
+                badge.className = 'status-offline';
+                text.innerText = 'Offline Mode (Data saved to device)';
+            }
         }
 
         function isToday(timestamp) {
@@ -290,15 +379,17 @@
             logs.forEach(log => {
                 const li = document.createElement('li');
                 li.className = 'log-item';
+                if (log.pending) li.classList.add('pending-item'); // Gray out pending items
+
                 const medClass = log.med === 'Ibuprofen' ? 'log-ibu' : 'log-aceta';
+                const statusIcon = log.pending ? ' (saving...)' : '';
                 
                 li.innerHTML = `
-                    <span class="log-med ${medClass}">${log.med}</span>
+                    <span class="log-med ${medClass}">${log.med}${statusIcon}</span>
                     <span class="log-time">${formatDay(log.time)} ${formatTime(log.time)}</span>
                 `;
                 list.appendChild(li);
 
-                // Calculate Totals (Only if it's today)
                 if (isToday(log.time)) {
                     if (log.med === 'Ibuprofen') dailyIbuCount++;
                     if (log.med === 'Acetaminophen') dailyAcetaCount++;
@@ -306,11 +397,8 @@
             });
 
             // 2. Update Daily Stats UI
-            const totalIbu = dailyIbuCount * DOSE_IBU;
-            const totalAceta = dailyAcetaCount * DOSE_ACETA;
-
-            updateStat('daily-ibu-val', totalIbu, LIMIT_IBU);
-            updateStat('daily-aceta-val', totalAceta, LIMIT_ACETA);
+            updateStat('daily-ibu-val', dailyIbuCount * DOSE_IBU, LIMIT_IBU);
+            updateStat('daily-aceta-val', dailyAcetaCount * DOSE_ACETA, LIMIT_ACETA);
 
             // 3. Update Timer Logic
             updateStatus();
@@ -319,15 +407,11 @@
         function updateStat(elementId, current, limit) {
             const el = document.getElementById(elementId);
             el.innerText = `${current} / ${limit} mg`;
-            
             el.className = 'stat-val'; // reset
             
-            // Logic: 75% = Warning, 100% = Danger
-            if (current >= limit) {
-                el.classList.add('danger');
-            } else if (current >= (limit * 0.75)) {
-                el.classList.add('warning');
-            } else {
+            if (current >= limit) el.classList.add('danger');
+            else if (current >= (limit * 0.75)) el.classList.add('warning');
+            else {
                 if (elementId.includes('ibu')) el.classList.add('stat-ibu');
                 if (elementId.includes('aceta')) el.classList.add('stat-aceta');
             }
@@ -348,7 +432,7 @@
 
             const lastLog = logs[0];
             const lastTime = Number(lastLog.time);
-            const nextTime = lastTime + (3 * 60 * 60 * 1000); // 3 hours
+            const nextTime = lastTime + (3 * 60 * 60 * 1000); 
             const now = Date.now();
             const nextMed = lastLog.med === 'Ibuprofen' ? 'Acetaminophen' : 'Ibuprofen';
 
@@ -370,11 +454,8 @@
             }
         }
 
-        // Service Worker for PWA
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js')
-                .then(() => console.log('Service Worker Registered'))
-                .catch((error) => console.log('Service Worker Registration Failed:', error));
+            navigator.serviceWorker.register('./sw.js');
         }
 
         init();
