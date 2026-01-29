@@ -277,39 +277,48 @@
             isSyncing = true;
             updateSyncStatus('syncing');
 
-            // Take the oldest item from the queue (FIFO)
             const item = queue[0];
             
-            // Construct URL with timestamp
-            const url = `${SCRIPT_URL}?action=${item.action}&med=${item.med}&passedTime=${item.timestamp}`;
+            // UPDATED: Use POST instead of GET
+            // This is much more reliable for Google Apps Script redirects
+            const params = new URLSearchParams();
+            params.append('action', item.action);
+            params.append('med', item.med);
+            params.append('passedTime', item.timestamp);
 
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    // Success! Remove item from queue
-                    queue.shift(); 
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: params
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error('Server error:', data.error);
+                    // Don't remove from queue if it's a server error, retry later
+                    isSyncing = false; 
+                    return; 
+                }
+
+                queue.shift(); 
+                saveLocal();
+
+                if (queue.length === 0) {
+                    logs = data; 
                     saveLocal();
-
-                    // If queue is now empty, we can trust the server data
-                    if (queue.length === 0) {
-                        logs = data; 
-                        saveLocal();
-                        render();
-                        updateSyncStatus('online');
-                    } else {
-                        // If more items, trigger next process immediately
-                        processQueue();
-                    }
-                })
-                .catch(error => {
-                    console.error('Sync failed:', error);
-                    updateSyncStatus('offline');
-                })
-                .finally(() => {
-                    isSyncing = false;
-                });
+                    render();
+                    updateSyncStatus('online');
+                } else {
+                    processQueue();
+                }
+            })
+            .catch(error => {
+                console.error('Sync failed:', error);
+                updateSyncStatus('offline');
+            })
+            .finally(() => {
+                isSyncing = false;
+            });
         }
-
         function fetchData() {
             if (!navigator.onLine) return;
             // Only fetch if queue is empty (otherwise we might overwrite local pending changes)
