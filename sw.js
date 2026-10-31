@@ -1,10 +1,13 @@
-// Pain Med Sync Service Worker v6
-const CACHE_NAME = 'pain-tracker-v6'; 
+// Pain Med Sync Service Worker v7
+const CACHE_NAME = 'pain-tracker-v7'; 
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './icon.png'
+  './icon.png',
+  './icon-192.png',
+  './icon-512.png',
+  './apple-touch-icon.png'
 ];
 
 // Install: Cache new files & activate immediately
