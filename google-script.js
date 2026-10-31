@@ -78,7 +78,12 @@ function handleRequest(e) {
       current.activeRound = (current.activeRound || 1) + 1;
       saveUserSettings(settingsSheet, current);
     }
-    // 5. TEST NTFY NOTIFICATION
+    // 5. DELETE USER PROFILE
+    else if (action === 'deleteUser') {
+      const targetUser = (e.parameter.targetUser || user).trim();
+      deleteUserFromSettings(settingsSheet, targetUser);
+    }
+    // 6. TEST NTFY NOTIFICATION
     else if (action === 'testNtfy') {
       const topic = (e.parameter.ntfyTopic || '').trim();
       if (topic) {
@@ -145,7 +150,7 @@ function ensureSheets(ss) {
     settings = ss.insertSheet('Settings');
     settings.appendRow(['User', 'DoseIbu', 'DoseAceta', 'LimitIbu', 'LimitAceta', 'IntervalHours', 'NtfyEnabled', 'NtfyTopic', 'ActiveRound']);
     
-    // Seed default profiles
+    // Seed default profile (Ben)
     saveUserSettings(settings, {
       user: 'Ben',
       doseIbu: 400,
@@ -157,21 +162,22 @@ function ensureSheets(ss) {
       ntfyTopic: 'painmed-ben-' + Math.floor(1000 + Math.random() * 9000),
       activeRound: 1
     });
-
-    saveUserSettings(settings, {
-      user: 'Wife',
-      doseIbu: 600,
-      doseAceta: 1000,
-      limitIbu: 3200,
-      limitAceta: 4000,
-      intervalHours: 4,
-      ntfyEnabled: false,
-      ntfyTopic: 'painmed-wife-' + Math.floor(1000 + Math.random() * 9000),
-      activeRound: 1
-    });
   }
 
   return { logs: logs, settings: settings };
+}
+
+/**
+ * Delete a user profile row from Settings sheet
+ */
+function deleteUserFromSettings(settingsSheet, targetUser) {
+  const data = settingsSheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][0]).trim().toLowerCase() === targetUser.trim().toLowerCase()) {
+      settingsSheet.deleteRow(i + 1);
+      return;
+    }
+  }
 }
 
 /**

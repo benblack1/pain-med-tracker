@@ -1,9 +1,12 @@
-// Pain Med Sync Service Worker v7
-const CACHE_NAME = 'pain-tracker-v7'; 
+// Pain Med Sync Service Worker v8
+const CACHE_NAME = 'pain-tracker-v8'; 
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './favicon.ico',
+  './favicon-32.png',
+  './favicon-16.png',
   './icon.png',
   './icon-192.png',
   './icon-512.png',

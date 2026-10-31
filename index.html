@@ -5,69 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Pain Med Sync</title>
     
+    <!-- Favicons & Icons (Tightly cropped for tab visibility) -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#0a0d14">
-
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-    <link rel="shortcut icon" href="icon-192.png">
 
     <style>
         :root {
-            /* Shared Palette */
-            --ibu-color: #ff5c5c;
-            --ibu-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5253 100%);
-            --ibu-glow: rgba(255, 92, 92, 0.35);
+            /* Palette & Accent Accents */
+            --ibu-color: #f87171;
+            --ibu-gradient: linear-gradient(135deg, #f87171 0%, #dc2626 100%);
+            --ibu-glow: rgba(239, 68, 68, 0.28);
             --aceta-color: #38bdf8;
             --aceta-gradient: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
-            --aceta-glow: rgba(56, 189, 248, 0.35);
+            --aceta-glow: rgba(56, 189, 248, 0.28);
             --sync-online: #10b981;
             --sync-syncing: #f59e0b;
             --sync-offline: #ef4444;
-            --radius-lg: 20px;
-            --radius-md: 14px;
+            --radius-lg: 18px;
+            --radius-md: 12px;
             --radius-sm: 8px;
             --safe-bottom: env(safe-area-inset-bottom, 16px);
         }
 
-        /* Dark Mode (Default) */
+        /* Dark Theme (High legibility, comfortable contrast) */
         [data-theme="dark"] {
-            --bg-page: #0a0d14;
-            --bg-ambient-1: radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.08) 0%, transparent 40%);
-            --bg-ambient-2: radial-gradient(circle at 90% 80%, rgba(255, 92, 92, 0.08) 0%, transparent 40%);
-            --glass-bg: rgba(18, 24, 38, 0.68);
-            --glass-bg-subtle: rgba(255, 255, 255, 0.03);
-            --glass-card: rgba(22, 30, 48, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-border-bright: rgba(255, 255, 255, 0.2);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --card-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
-            --modal-overlay: rgba(0, 0, 0, 0.7);
-            --input-bg: rgba(15, 23, 42, 0.8);
+            --bg-page: #0a0e17;
+            --bg-ambient-1: radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.07) 0%, transparent 40%);
+            --bg-ambient-2: radial-gradient(circle at 85% 85%, rgba(248, 113, 113, 0.07) 0%, transparent 40%);
+            --glass-bg: rgba(18, 24, 38, 0.78);
+            --glass-card: rgba(18, 24, 38, 0.72);
+            --glass-border: rgba(255, 255, 255, 0.09);
+            --glass-border-subtle: rgba(255, 255, 255, 0.05);
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+            --modal-overlay: rgba(0, 0, 0, 0.65);
+            --input-bg: rgba(15, 23, 42, 0.85);
+            --dock-bg: rgba(15, 23, 42, 0.85);
         }
 
-        /* Light Mode */
+        /* Light Theme (Crisp, soft, high contrast) */
         [data-theme="light"] {
-            --bg-page: #f1f5f9;
-            --bg-ambient-1: radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.12) 0%, transparent 45%);
-            --bg-ambient-2: radial-gradient(circle at 90% 80%, rgba(255, 92, 92, 0.12) 0%, transparent 45%);
-            --glass-bg: rgba(255, 255, 255, 0.78);
-            --glass-bg-subtle: rgba(0, 0, 0, 0.02);
-            --glass-card: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.8);
-            --glass-border-bright: rgba(0, 0, 0, 0.12);
+            --bg-page: #f8fafc;
+            --bg-ambient-1: radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.1) 0%, transparent 45%);
+            --bg-ambient-2: radial-gradient(circle at 85% 85%, rgba(248, 113, 113, 0.1) 0%, transparent 45%);
+            --glass-bg: rgba(255, 255, 255, 0.88);
+            --glass-card: rgba(255, 255, 255, 0.82);
+            --glass-border: rgba(226, 232, 240, 0.85);
+            --glass-border-subtle: rgba(241, 245, 249, 0.9);
             --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #94a3b8;
-            --card-shadow: 0 12px 32px rgba(100, 116, 139, 0.12);
-            --modal-overlay: rgba(15, 23, 42, 0.4);
-            --input-bg: rgba(255, 255, 255, 0.9);
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --card-shadow: 0 8px 24px rgba(100, 116, 139, 0.08);
+            --modal-overlay: rgba(15, 23, 42, 0.45);
+            --input-bg: rgba(255, 255, 255, 0.95);
+            --dock-bg: rgba(255, 255, 255, 0.92);
         }
 
         * {
@@ -78,8 +81,8 @@
 
         body {
             margin: 0;
-            padding: 16px 16px calc(76px + var(--safe-bottom)) 16px;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 16px 16px calc(78px + var(--safe-bottom)) 16px;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-page);
             background-image: var(--bg-ambient-1), var(--bg-ambient-2);
             background-attachment: fixed;
@@ -88,10 +91,11 @@
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            transition: background-color 0.3s ease, color 0.3s ease;
+            transition: background-color 0.25s ease, color 0.25s ease;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Glass Surface Utilities */
+        /* Glass Panel */
         .glass-panel {
             background: var(--glass-card);
             backdrop-filter: blur(20px);
@@ -106,36 +110,31 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 14px;
-            padding: 4px 2px;
+            margin-bottom: 12px;
+            padding: 2px 0;
         }
 
         .header-title-box {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+        }
+
+        .header-logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border);
+            display: block;
         }
 
         .header-title {
             font-size: 1.15rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
+            font-weight: 600;
+            letter-spacing: -0.01em;
             margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .pill-badge {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-            padding: 2px 7px;
-            border-radius: 20px;
-            background: rgba(56, 189, 248, 0.15);
-            color: var(--aceta-color);
-            border: 1px solid rgba(56, 189, 248, 0.25);
+            color: var(--text-primary);
         }
 
         .header-controls {
@@ -149,7 +148,7 @@
             border: 1px solid var(--glass-border);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            color: var(--text-primary);
+            color: var(--text-secondary);
             width: 38px;
             height: 38px;
             border-radius: 50%;
@@ -157,8 +156,11 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
+            transition: all 0.18s ease;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-primary);
         }
 
         .icon-btn:active {
@@ -175,16 +177,16 @@
             stroke-linejoin: round;
         }
 
-        /* Sync Pulse Dot */
+        /* Sync Pulse Indicator */
         .sync-indicator {
-            width: 10px;
-            height: 10px;
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
             background-color: var(--sync-syncing);
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.08);
             transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
-        .sync-online { background-color: var(--sync-online); box-shadow: 0 0 10px var(--sync-online); }
+        .sync-online { background-color: var(--sync-online); box-shadow: 0 0 8px var(--sync-online); }
         .sync-syncing { background-color: var(--sync-syncing); animation: pulseDot 1.2s infinite; }
         .sync-offline { background-color: var(--sync-offline); }
 
@@ -194,121 +196,103 @@
             100% { opacity: 0.4; transform: scale(0.9); }
         }
 
-        /* Caregiver Status Banner */
+        /* Caregiver Switcher Bar (Only shown if multi-user) */
         .caregiver-bar {
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: space-between;
             padding: 8px 14px;
             margin-bottom: 12px;
             border-radius: var(--radius-md);
-            font-size: 0.82rem;
+            font-size: 0.84rem;
             color: var(--text-secondary);
             cursor: pointer;
             transition: background 0.2s ease;
         }
-        .caregiver-bar:active {
-            background: rgba(255, 255, 255, 0.06);
+        .caregiver-bar.visible {
+            display: flex;
         }
         .caregiver-chip {
-            font-weight: 700;
-            color: var(--text-primary);
-            background: var(--glass-bg-subtle);
-            padding: 2px 8px;
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Hero Status Panel */
-        #status-panel {
-            padding: 22px 18px;
-            text-align: center;
-            margin-bottom: 14px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #status-panel::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .status-subtitle {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
             font-weight: 600;
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+        }
+
+        /* Main Hero Status Panel */
+        #status-panel {
+            padding: 20px 16px;
+            text-align: center;
+            margin-bottom: 12px;
+            position: relative;
+        }
+
+        .status-label {
+            font-size: 0.82rem;
+            font-weight: 500;
             color: var(--text-muted);
             margin-bottom: 4px;
         }
 
         #next-dose-time {
-            font-size: 2.7rem;
-            font-weight: 800;
-            letter-spacing: -0.04em;
-            margin: 4px 0 8px 0;
+            font-size: 2.3rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin: 2px 0 8px 0;
             color: var(--sync-online);
-            line-height: 1.05;
-            transition: color 0.3s ease;
+            line-height: 1.1;
+            font-variant-numeric: tabular-nums;
+            font-feature-settings: "tnum";
         }
 
         .wait-time {
             color: var(--sync-syncing) !important;
-            font-feature-settings: "tnum";
-            font-variant-numeric: tabular-nums;
         }
 
         .recommendation-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 7px 16px;
-            border-radius: 30px;
-            font-size: 0.95rem;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.92rem;
             font-weight: 600;
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--glass-border);
-            margin-top: 4px;
+            margin-top: 2px;
         }
 
         .recommendation-badge.ibu {
             color: var(--ibu-color);
-            background: rgba(255, 92, 92, 0.12);
-            border-color: rgba(255, 92, 92, 0.3);
+            background: rgba(248, 113, 113, 0.12);
+            border-color: rgba(248, 113, 113, 0.25);
         }
 
         .recommendation-badge.aceta {
             color: var(--aceta-color);
             background: rgba(56, 189, 248, 0.12);
-            border-color: rgba(56, 189, 248, 0.3);
+            border-color: rgba(56, 189, 248, 0.25);
         }
 
         .last-dose-hint {
             font-size: 0.78rem;
             color: var(--text-muted);
-            margin-top: 10px;
+            margin-top: 8px;
+            font-weight: 400;
         }
 
         /* Daily Stats (Rolling 24h) */
         .stats-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 14px;
+            gap: 10px;
+            margin-bottom: 12px;
         }
 
         .stat-card {
-            padding: 14px 12px;
-            position: relative;
+            padding: 12px;
         }
 
         .stat-header {
@@ -316,16 +300,17 @@
             align-items: center;
             justify-content: space-between;
             font-size: 0.76rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 4px;
         }
 
         .stat-val {
-            font-size: 1.12rem;
-            font-weight: 800;
-            margin-bottom: 8px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 6px;
             display: block;
+            color: var(--text-primary);
         }
 
         .stat-val.ibu { color: var(--ibu-color); }
@@ -334,22 +319,21 @@
         .stat-val.danger { color: var(--sync-offline); }
 
         .progress-track {
-            height: 6px;
+            height: 5px;
             background: rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
+            border-radius: 8px;
             overflow: hidden;
-            position: relative;
         }
 
         [data-theme="light"] .progress-track {
-            background: rgba(0, 0, 0, 0.06);
+            background: rgba(0, 0, 0, 0.07);
         }
 
         .progress-fill {
             height: 100%;
-            border-radius: 10px;
+            border-radius: 8px;
             width: 0%;
-            transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+            transition: width 0.4s ease, background-color 0.3s ease;
         }
 
         .fill-ibu { background: var(--ibu-gradient); }
@@ -362,19 +346,17 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .btn-dose {
             border: none;
             border-radius: var(--radius-lg);
-            padding: 20px 10px;
+            padding: 18px 10px;
             color: #ffffff;
             cursor: pointer;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-            transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            transition: all 0.15s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -384,39 +366,37 @@
 
         .btn-dose:active {
             transform: scale(0.96);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .btn-dose-name {
-            font-size: 1.15rem;
-            font-weight: 800;
+            font-size: 1.1rem;
+            font-weight: 600;
             letter-spacing: -0.01em;
             line-height: 1.1;
         }
 
         .btn-dose-mg {
-            font-size: 0.85rem;
-            font-weight: 600;
-            opacity: 0.9;
+            font-size: 0.82rem;
+            font-weight: 500;
+            opacity: 0.95;
             background: rgba(0, 0, 0, 0.2);
-            padding: 3px 10px;
-            border-radius: 20px;
-            margin-top: 2px;
+            padding: 2px 10px;
+            border-radius: 12px;
         }
 
         .btn-ibu {
             background: var(--ibu-gradient);
-            box-shadow: 0 10px 24px var(--ibu-glow);
+            box-shadow: 0 8px 20px var(--ibu-glow);
         }
 
         .btn-aceta {
             background: var(--aceta-gradient);
-            box-shadow: 0 10px 24px var(--aceta-glow);
+            box-shadow: 0 8px 20px var(--aceta-glow);
         }
 
         /* History Log Section */
         .history-card {
-            padding: 16px;
+            padding: 14px 16px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -428,9 +408,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding-bottom: 10px;
+            padding-bottom: 8px;
             border-bottom: 1px solid var(--glass-border);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .history-title-wrap {
@@ -440,17 +420,18 @@
         }
 
         .history-title {
-            font-size: 0.95rem;
-            font-weight: 700;
+            font-size: 0.92rem;
+            font-weight: 600;
             margin: 0;
+            color: var(--text-primary);
         }
 
         .round-tag {
             font-size: 0.7rem;
-            font-weight: 700;
-            padding: 2px 8px;
-            border-radius: 10px;
-            background: var(--glass-bg-subtle);
+            font-weight: 500;
+            padding: 2px 7px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--glass-border);
             color: var(--text-secondary);
         }
@@ -466,9 +447,9 @@
             color: var(--text-secondary);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-sm);
-            padding: 5px 9px;
-            font-size: 0.78rem;
-            font-weight: 600;
+            padding: 4px 8px;
+            font-size: 0.76rem;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.15s ease;
         }
@@ -491,10 +472,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 4px;
+            padding: 9px 2px;
             border-bottom: 1px solid var(--glass-border);
-            font-size: 0.9rem;
-            transition: opacity 0.2s ease;
+            font-size: 0.88rem;
         }
 
         .log-item:last-child {
@@ -509,11 +489,11 @@
         .log-left {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 1px;
         }
 
         .log-med-name {
-            font-weight: 700;
+            font-weight: 600;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -525,37 +505,40 @@
         .log-meta {
             font-size: 0.74rem;
             color: var(--text-muted);
+            font-weight: 400;
         }
 
         .log-right {
             text-align: right;
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 1px;
         }
 
         .log-time {
-            font-size: 0.86rem;
-            font-weight: 600;
+            font-size: 0.84rem;
+            font-weight: 500;
             color: var(--text-primary);
         }
 
         .log-rel {
             font-size: 0.72rem;
             color: var(--text-muted);
+            font-weight: 400;
         }
 
         .empty-history {
             text-align: center;
             color: var(--text-muted);
-            padding: 30px 0;
-            font-size: 0.88rem;
+            padding: 28px 0;
+            font-size: 0.85rem;
+            font-weight: 400;
         }
 
-        /* Bottom Floating User Bar */
+        /* Bottom Floating User Dock */
         .user-dock-container {
             position: fixed;
-            bottom: calc(12px + var(--safe-bottom));
+            bottom: calc(10px + var(--safe-bottom));
             left: 16px;
             right: 16px;
             z-index: 90;
@@ -564,16 +547,16 @@
 
         .user-dock {
             pointer-events: auto;
-            background: var(--glass-bg);
+            background: var(--dock-bg);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--glass-border-bright);
-            border-radius: 40px;
-            padding: 6px;
+            border: 1px solid var(--glass-border);
+            border-radius: 36px;
+            padding: 5px;
             display: flex;
             align-items: center;
             gap: 6px;
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
             overflow-x: auto;
             scrollbar-width: none;
         }
@@ -584,16 +567,16 @@
 
         .user-tab {
             flex: 1;
-            min-width: 80px;
+            min-width: 76px;
             border: none;
             background: transparent;
             color: var(--text-secondary);
-            font-size: 0.88rem;
-            font-weight: 700;
-            padding: 10px 14px;
-            border-radius: 30px;
+            font-size: 0.86rem;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 24px;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.18s ease;
             text-align: center;
             white-space: nowrap;
         }
@@ -602,24 +585,26 @@
             color: var(--text-primary);
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
         }
 
         .user-tab-add {
-            flex: 0 0 42px;
-            min-width: 42px;
-            height: 42px;
+            flex: 0 0 38px;
+            min-width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--glass-bg-subtle);
+            background: transparent;
             border: 1px dashed var(--glass-border);
             color: var(--text-secondary);
+            font-size: 1.1rem;
             padding: 0;
         }
 
-        /* Modal Sheets */
+        /* Modal Sheets & Touch Drag Down */
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -632,7 +617,7 @@
             z-index: 100;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.25s ease;
+            transition: opacity 0.22s ease;
         }
 
         .modal-overlay.active {
@@ -643,68 +628,82 @@
         .modal-sheet {
             width: 100%;
             max-width: 520px;
-            max-height: 85vh;
+            max-height: 86vh;
             background: var(--glass-card);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid var(--glass-border-bright);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid var(--glass-border);
             border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-            padding: 22px 20px calc(24px + var(--safe-bottom)) 20px;
+            padding: 14px 18px calc(24px + var(--safe-bottom)) 18px;
             transform: translateY(100%);
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
             overflow-y: auto;
+            touch-action: pan-y;
         }
 
         .modal-overlay.active .modal-sheet {
             transform: translateY(0);
         }
 
-        .modal-handle {
-            width: 40px;
-            height: 4px;
+        /* Interactive Drag Handle */
+        .drag-handle-container {
+            width: 100%;
+            padding: 6px 0 14px 0;
+            display: flex;
+            justify-content: center;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .drag-handle {
+            width: 44px;
+            height: 5px;
             background: var(--text-muted);
-            opacity: 0.4;
+            opacity: 0.35;
             border-radius: 4px;
-            margin: 0 auto 16px auto;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .drag-handle-container:hover .drag-handle {
+            opacity: 0.6;
         }
 
         .modal-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .modal-title {
-            font-size: 1.25rem;
-            font-weight: 800;
+            font-size: 1.15rem;
+            font-weight: 600;
             margin: 0;
+            color: var(--text-primary);
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .form-label {
             display: block;
             font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            font-weight: 500;
             color: var(--text-secondary);
-            margin-bottom: 6px;
+            margin-bottom: 5px;
         }
 
         .form-control {
             width: 100%;
-            padding: 12px 14px;
+            padding: 11px 13px;
             background: var(--input-bg);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-md);
             color: var(--text-primary);
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             outline: none;
-            transition: border-color 0.2s ease;
+            transition: border-color 0.18s ease;
         }
 
         .form-control:focus {
@@ -714,24 +713,24 @@
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
+            gap: 10px;
         }
 
         .toggle-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 0;
+            padding: 10px 0;
             border-top: 1px solid var(--glass-border);
             border-bottom: 1px solid var(--glass-border);
-            margin: 14px 0;
+            margin: 12px 0;
         }
 
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 48px;
-            height: 28px;
+            width: 46px;
+            height: 26px;
         }
 
         .toggle-switch input {
@@ -745,21 +744,21 @@
             cursor: pointer;
             inset: 0;
             background-color: rgba(255, 255, 255, 0.15);
-            border-radius: 34px;
-            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 30px;
+            transition: 0.25s ease;
             border: 1px solid var(--glass-border);
         }
 
         .toggle-slider:before {
             position: absolute;
             content: "";
-            height: 20px;
-            width: 20px;
+            height: 18px;
+            width: 18px;
             left: 3px;
             bottom: 3px;
             background-color: white;
             border-radius: 50%;
-            transition: 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: 0.25s ease;
         }
 
         input:checked + .toggle-slider {
@@ -772,14 +771,14 @@
 
         .btn-full {
             width: 100%;
-            padding: 14px;
+            padding: 13px;
             border: none;
             border-radius: var(--radius-md);
-            font-size: 1rem;
-            font-weight: 700;
+            font-size: 0.95rem;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 8px;
-            transition: transform 0.15s ease;
+            margin-top: 6px;
+            transition: transform 0.15s ease, opacity 0.15s ease;
         }
 
         .btn-full:active {
@@ -789,36 +788,41 @@
         .btn-primary {
             background: var(--aceta-gradient);
             color: #ffffff;
-            box-shadow: 0 4px 16px var(--aceta-glow);
+            box-shadow: 0 4px 14px var(--aceta-glow);
+        }
+
+        .btn-warning {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--sync-syncing);
         }
 
         .btn-danger {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid rgba(239, 68, 68, 0.3);
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.28);
             color: var(--sync-offline);
         }
 
         .help-tip {
-            font-size: 0.75rem;
+            font-size: 0.74rem;
             color: var(--text-muted);
             line-height: 1.4;
             margin-top: 4px;
         }
 
-        /* Pill dose options modal / context */
         .preset-badge-group {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
-            margin-top: 8px;
+            margin-top: 6px;
         }
 
         .preset-badge {
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 6px 12px;
-            border-radius: 20px;
-            background: var(--glass-bg-subtle);
+            font-size: 0.78rem;
+            font-weight: 500;
+            padding: 5px 11px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             color: var(--text-secondary);
             cursor: pointer;
@@ -827,27 +831,25 @@
         .preset-badge.selected {
             background: rgba(56, 189, 248, 0.15);
             color: var(--aceta-color);
-            border-color: rgba(56, 189, 248, 0.4);
+            border-color: rgba(56, 189, 248, 0.35);
+            font-weight: 600;
         }
     </style>
 </head>
 <body data-theme="dark">
 
-    <!-- Top Header -->
+    <!-- Top Header Navigation -->
     <header class="header">
         <div class="header-title-box">
-            <img src="icon-192.png" alt="Pain Med Sync" style="width: 28px; height: 28px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); border: 1px solid var(--glass-border);">
-            <h1 class="header-title">
-                Pain Med Sync
-                <span class="pill-badge">PWA</span>
-            </h1>
+            <img src="favicon-192.png" alt="Logo" class="header-logo">
+            <h1 class="header-title">Pain Med Sync</h1>
         </div>
 
         <div class="header-controls">
-            <!-- Sync Indicator Dot with Tooltip -->
+            <!-- Sync Indicator Dot -->
             <div id="sync-dot" class="sync-indicator sync-syncing" title="Sync Status"></div>
             
-            <!-- Light/Dark Toggle -->
+            <!-- Light/Dark Theme Switcher -->
             <button class="icon-btn" id="btn-theme" title="Toggle Theme" onclick="toggleTheme()">
                 <svg id="theme-icon" viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="5"></circle>
@@ -872,15 +874,15 @@
         </div>
     </header>
 
-    <!-- Caregiver / Admin Switcher Bar -->
-    <div class="caregiver-bar glass-panel" onclick="cycleLoggedBy()">
+    <!-- Caregiver Bar (Displayed when multiple users exist) -->
+    <div id="caregiver-bar" class="caregiver-bar glass-panel" onclick="cycleLoggedBy()">
         <span>Patient: <strong id="bar-user-name">Ben</strong></span>
         <span>Administered by: <span class="caregiver-chip" id="bar-logged-by">Ben ▾</span></span>
     </div>
 
-    <!-- Main Hero Status Panel -->
+    <!-- Main Status Hero Card -->
     <main id="status-panel" class="glass-panel">
-        <div class="status-subtitle" id="status-title">Checking Schedule...</div>
+        <div class="status-label" id="status-title">Checking Schedule...</div>
         <div id="next-dose-time">--:--</div>
         <div id="recommendation" class="recommendation-badge">Start dose</div>
         <div id="last-dose-hint" class="last-dose-hint">No doses logged yet</div>
@@ -911,7 +913,7 @@
         </div>
     </section>
 
-    <!-- Quick Action Dose Buttons -->
+    <!-- Big Action Dose Buttons -->
     <section class="action-grid">
         <button id="btn-dose-ibu" class="btn-dose btn-ibu" onclick="logDose('Ibuprofen')">
             <span class="btn-dose-name">Ibuprofen</span>
@@ -924,7 +926,7 @@
         </button>
     </section>
 
-    <!-- History & Round Log -->
+    <!-- History Log Section -->
     <section class="history-card glass-panel">
         <div class="history-header">
             <div class="history-title-wrap">
@@ -949,10 +951,14 @@
         </nav>
     </div>
 
-    <!-- SETTINGS MODAL -->
+    <!-- SETTINGS MODAL SHEET -->
     <div class="modal-overlay" id="modal-settings" onclick="closeModalOnBackdrop(event, 'modal-settings')">
-        <div class="modal-sheet">
-            <div class="modal-handle"></div>
+        <div class="modal-sheet" id="sheet-settings">
+            <!-- Interactive Drag Handle (Drag down to dismiss) -->
+            <div class="drag-handle-container" id="drag-handle-settings">
+                <div class="drag-handle"></div>
+            </div>
+
             <div class="modal-header">
                 <h3 class="modal-title">Settings & Profile</h3>
                 <button class="icon-btn" onclick="closeSettingsModal()">✕</button>
@@ -986,15 +992,15 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label">Alternating Schedule Interval (Hours)</label>
+                <label class="form-label">Alternating Rotation Interval (Hours)</label>
                 <input type="number" id="cfg-interval" class="form-control" step="0.5" min="1" max="12">
-                <div class="help-tip">Standard rotation: 4 hours between doses while awake.</div>
+                <div class="help-tip">Standard rotation: 4 hours alternating while awake.</div>
             </div>
 
-            <!-- Push Notifications (ntfy.sh) Section -->
+            <!-- Push Notifications (ntfy.sh) -->
             <div class="toggle-row">
                 <div>
-                    <strong>Push Notifications</strong>
+                    <strong style="font-size:0.92rem;">Push Notifications</strong>
                     <div class="help-tip">Remind when next dose is eligible</div>
                 </div>
                 <label class="toggle-switch">
@@ -1013,29 +1019,34 @@
                 <button type="button" class="btn-subtle" style="margin-top:8px;" onclick="testNtfy()">🔔 Send Test Notification</button>
             </div>
 
-            <!-- Device Identity ("Logged By") -->
+            <!-- Device Caregiver Setting -->
             <div class="form-group">
                 <label class="form-label">Default Caregiver on this Phone</label>
-                <input type="text" id="cfg-device-admin" class="form-control" placeholder="e.g. Ben or Sarah">
-                <div class="help-tip">Auto-stamped as "Logged by" when you record a dose.</div>
+                <input type="text" id="cfg-device-admin" class="form-control" placeholder="e.g. Ben">
+                <div class="help-tip">Stamped as "Administered by" when logging doses.</div>
             </div>
 
-            <!-- Google Script Backend URL -->
+            <!-- Google Script URL -->
             <div class="form-group">
                 <label class="form-label">Google Sheet Web App URL</label>
                 <input type="text" id="cfg-script-url" class="form-control" placeholder="https://script.google.com/macros/s/.../exec">
             </div>
 
-            <!-- Actions -->
+            <!-- Modal Action Buttons -->
             <button class="btn-full btn-primary" onclick="saveSettingsFromModal()">Save & Sync Settings</button>
-            <button class="btn-full btn-danger" style="margin-top:10px;" onclick="promptResetRound()">Start New Round / Archive Current</button>
+            <button class="btn-full btn-warning" style="margin-top:8px;" onclick="promptResetRound()">Start New Round / Reset Totals</button>
+            
+            <!-- Delete Profile Button (only available if > 1 user) -->
+            <button class="btn-full btn-danger" id="btn-delete-user" style="margin-top:8px; display:none;" onclick="confirmDeleteUser()">Delete This Profile</button>
         </div>
     </div>
 
     <!-- ADD USER MODAL -->
     <div class="modal-overlay" id="modal-add-user" onclick="closeModalOnBackdrop(event, 'modal-add-user')">
-        <div class="modal-sheet">
-            <div class="modal-handle"></div>
+        <div class="modal-sheet" id="sheet-add-user">
+            <div class="drag-handle-container" id="drag-handle-add-user">
+                <div class="drag-handle"></div>
+            </div>
             <div class="modal-header">
                 <h3 class="modal-title">Add New Person</h3>
                 <button class="icon-btn" onclick="closeAddUserModal()">✕</button>
@@ -1060,23 +1071,22 @@
     </div>
 
     <script>
-        // --- CONSTANTS & PERSISTENCE ---
+        // --- CONSTANTS & SCRIPT URL ---
         const DEFAULT_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzPMUbqEbgPnCjnmwjcs-p7CZk0N4zSm9xYjVRPugQqDqIHVMgtIv2rsPCNxEZdmO8Q2Q/exec';
-        
         let SCRIPT_URL = localStorage.getItem('pain_script_url') || DEFAULT_SCRIPT_URL;
 
-        // Default Presets
+        // Presets
         const PRESETS = {
             ben: { doseIbu: 400, doseAceta: 500, limitIbu: 2400, limitAceta: 3000, intervalHours: 4 },
             postpartum: { doseIbu: 600, doseAceta: 1000, limitIbu: 3200, limitAceta: 4000, intervalHours: 4 },
             standard: { doseIbu: 400, doseAceta: 650, limitIbu: 2400, limitAceta: 3250, intervalHours: 4 }
         };
 
-        // Current App State
+        // Application State (Defaults to just 'Ben')
         let state = {
-            currentUser: localStorage.getItem('pain_active_user') || 'Ben',
-            loggedBy: localStorage.getItem('pain_logged_by') || 'Ben',
-            users: ['Ben', 'Wife'],
+            currentUser: 'Ben',
+            loggedBy: 'Ben',
+            users: ['Ben'],
             settings: {
                 'Ben': {
                     user: 'Ben',
@@ -1087,17 +1097,6 @@
                     intervalHours: 4,
                     ntfyEnabled: false,
                     ntfyTopic: 'painmed-ben-' + Math.floor(1000 + Math.random() * 9000),
-                    activeRound: 1
-                },
-                'Wife': {
-                    user: 'Wife',
-                    doseIbu: 600,
-                    doseAceta: 1000,
-                    limitIbu: 3200,
-                    limitAceta: 4000,
-                    intervalHours: 4,
-                    ntfyEnabled: false,
-                    ntfyTopic: 'painmed-wife-' + Math.floor(1000 + Math.random() * 9000),
                     activeRound: 1
                 }
             },
@@ -1110,30 +1109,24 @@
 
         // --- INITIALIZATION ---
         function init() {
-            // 1. Theme setup
             initTheme();
-
-            // 2. Load Local Storage state
             loadFromStorage();
-
-            // 3. Render initial UI
+            setupDragToDismiss('sheet-settings', 'drag-handle-settings', closeSettingsModal);
+            setupDragToDismiss('sheet-add-user', 'drag-handle-add-user', closeAddUserModal);
             render();
 
-            // 4. Start Loops
-            setInterval(updateCountdown, 1000); // 1-second live countdown
-            setInterval(fetchCloudData, 45000); // Periodic pull
-            setInterval(processQueue, 5000);    // Push queue
+            setInterval(updateCountdown, 1000);
+            setInterval(fetchCloudData, 45000);
+            setInterval(processQueue, 5000);
 
-            // 5. Initial Pull
             fetchCloudData();
         }
 
-        // --- THEME HANDLER ---
+        // --- THEME ---
         function initTheme() {
             const saved = localStorage.getItem('pain_theme');
             const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            const theme = saved || (prefersDark ? 'dark' : 'dark'); // Default dark
-            applyTheme(theme);
+            applyTheme(saved || (prefersDark ? 'dark' : 'dark'));
         }
 
         function toggleTheme() {
@@ -1157,26 +1150,45 @@
         // --- STORAGE ---
         function loadFromStorage() {
             try {
-                const cachedLogs = localStorage.getItem('pain_logs_v2');
-                const cachedQueue = localStorage.getItem('pain_queue_v2');
-                const cachedSettings = localStorage.getItem('pain_settings_v2');
-                const cachedUsers = localStorage.getItem('pain_users_v2');
+                const cachedLogs = localStorage.getItem('pain_logs_v3');
+                const cachedQueue = localStorage.getItem('pain_queue_v3');
+                const cachedSettings = localStorage.getItem('pain_settings_v3');
+                const cachedUsers = localStorage.getItem('pain_users_v3');
+                const cachedActiveUser = localStorage.getItem('pain_active_user');
+                const cachedAdmin = localStorage.getItem('pain_logged_by');
 
                 if (cachedLogs) state.logs = JSON.parse(cachedLogs);
                 if (cachedQueue) state.queue = JSON.parse(cachedQueue);
                 if (cachedSettings) state.settings = JSON.parse(cachedSettings);
                 if (cachedUsers) state.users = JSON.parse(cachedUsers);
+
+                // Clean legacy seed if "Wife" exists without logs
+                if (state.users && state.users.includes('Wife')) {
+                    const hasWifeLogs = state.logs && state.logs.some(l => l.user === 'Wife');
+                    if (!hasWifeLogs) {
+                        state.users = state.users.filter(u => u !== 'Wife');
+                        delete state.settings['Wife'];
+                    }
+                }
+
+                if (cachedActiveUser && state.users.includes(cachedActiveUser)) {
+                    state.currentUser = cachedActiveUser;
+                } else if (state.users.length > 0) {
+                    state.currentUser = state.users[0];
+                }
+
+                if (cachedAdmin) state.loggedBy = cachedAdmin;
             } catch (e) {
-                console.warn('Cache parse error:', e);
+                console.warn('Cache load error:', e);
             }
         }
 
         function saveToStorage() {
             try {
-                localStorage.setItem('pain_logs_v2', JSON.stringify(state.logs));
-                localStorage.setItem('pain_queue_v2', JSON.stringify(state.queue));
-                localStorage.setItem('pain_settings_v2', JSON.stringify(state.settings));
-                localStorage.setItem('pain_users_v2', JSON.stringify(state.users));
+                localStorage.setItem('pain_logs_v3', JSON.stringify(state.logs));
+                localStorage.setItem('pain_queue_v3', JSON.stringify(state.queue));
+                localStorage.setItem('pain_settings_v3', JSON.stringify(state.settings));
+                localStorage.setItem('pain_users_v3', JSON.stringify(state.users));
                 localStorage.setItem('pain_active_user', state.currentUser);
                 localStorage.setItem('pain_logged_by', state.loggedBy);
             } catch (e) {
@@ -1184,7 +1196,7 @@
             }
         }
 
-        // --- CAREGIVER & USER SWITCHING ---
+        // --- USER & CAREGIVER SWITCHING ---
         function switchUser(userName) {
             if (!userName || userName === state.currentUser) return;
             state.currentUser = userName;
@@ -1194,7 +1206,6 @@
         }
 
         function cycleLoggedBy() {
-            // Cycle between users list as the current administering person
             const idx = state.users.indexOf(state.loggedBy);
             const nextIdx = (idx + 1) % state.users.length;
             state.loggedBy = state.users[nextIdx];
@@ -1220,7 +1231,7 @@
             return state.settings[state.currentUser];
         }
 
-        // --- ACTIONS: LOG & UNDO (OPTIMISTIC) ---
+        // --- LOGGING & UNDO ---
         function logDose(med) {
             haptic();
             const userCfg = getCurrentUserSettings();
@@ -1237,10 +1248,8 @@
                 pending: true
             };
 
-            // 1. Optimistic prepend
             state.logs.unshift(newLog);
 
-            // 2. Add to Queue
             state.queue.push({
                 action: 'add',
                 user: state.currentUser,
@@ -1251,7 +1260,6 @@
                 passedTime: now
             });
 
-            // If ntfy is enabled on client, we also schedule directly for immediate assurance
             if (userCfg.ntfyEnabled && userCfg.ntfyTopic) {
                 scheduleClientNtfy(med, now, userCfg);
             }
@@ -1266,17 +1274,14 @@
             const userCfg = getCurrentUserSettings();
             const activeRound = userCfg.activeRound || 1;
 
-            // Find last log for current user in active round
             const idx = state.logs.findIndex(l => l.user === state.currentUser && (l.round || 1) === activeRound);
             if (idx === -1) {
                 alert('No doses to undo for ' + state.currentUser + ' in this round.');
                 return;
             }
 
-            // Remove locally
             state.logs.splice(idx, 1);
 
-            // Queue undo
             state.queue.push({
                 action: 'undo',
                 user: state.currentUser,
@@ -1308,7 +1313,35 @@
             closeSettingsModal();
         }
 
-        // --- NETWORK & SYNC ENGINE ---
+        function confirmDeleteUser() {
+            const user = state.currentUser;
+            if (state.users.length <= 1) {
+                alert('You must have at least one profile.');
+                return;
+            }
+
+            const confirmed = confirm(`Delete profile "${user}"?\n\nThis will remove this user profile from the app.`);
+            if (!confirmed) return;
+
+            haptic();
+            state.users = state.users.filter(u => u !== user);
+            delete state.settings[user];
+
+            state.queue.push({
+                action: 'deleteUser',
+                targetUser: user
+            });
+
+            state.currentUser = state.users[0];
+            state.loggedBy = state.users[0];
+
+            saveToStorage();
+            render();
+            processQueue();
+            closeSettingsModal();
+        }
+
+        // --- NETWORK & SYNC ---
         function updateSyncStatus(status) {
             const dot = document.getElementById('sync-dot');
             dot.className = 'sync-indicator ' + (status === 'online' ? 'sync-online' : status === 'syncing' ? 'sync-syncing' : 'sync-offline');
@@ -1342,11 +1375,9 @@
                     return;
                 }
 
-                // Dequeue successfully processed item
                 state.queue.shift();
                 saveToStorage();
 
-                // If queue is now empty, accept backend data payload
                 if (state.queue.length === 0) {
                     applyServerPayload(data);
                     updateSyncStatus('online');
@@ -1383,9 +1414,7 @@
         function applyServerPayload(data) {
             if (!data) return;
 
-            // Support new format { logs, settings, users } or legacy array [...]
             if (Array.isArray(data)) {
-                // Legacy GAS output
                 state.logs = data.map(item => ({
                     time: Number(item.time) || Date.now(),
                     user: item.user || 'Ben',
@@ -1398,7 +1427,14 @@
                 state.logs = data.logs;
                 if (data.settings) state.settings = Object.assign({}, state.settings, data.settings);
                 if (data.users && Array.isArray(data.users)) {
-                    state.users = Array.from(new Set([...state.users, ...data.users]));
+                    // Filter out legacy unseeded "Wife" if user never logged doses for it
+                    const validUsers = data.users.filter(u => {
+                        if (u === 'Wife' && !state.logs.some(l => l.user === 'Wife')) return false;
+                        return true;
+                    });
+                    if (validUsers.length > 0) {
+                        state.users = Array.from(new Set([...state.users, ...validUsers]));
+                    }
                 }
             }
 
@@ -1406,7 +1442,7 @@
             render();
         }
 
-        // --- NTFY NOTIFICATION SCHEDULING ---
+        // --- NTFY NOTIFICATIONS ---
         function scheduleClientNtfy(lastMed, doseTime, userCfg) {
             const intervalHours = Number(userCfg.intervalHours) || 4;
             const nextMed = lastMed === 'Ibuprofen' ? 'Acetaminophen' : 'Ibuprofen';
@@ -1455,22 +1491,29 @@
             const userCfg = getCurrentUserSettings();
             const activeRound = userCfg.activeRound || 1;
 
-            // 1. Header & Admin Chips
-            document.getElementById('bar-user-name').innerText = user;
-            document.getElementById('bar-logged-by').innerText = `${state.loggedBy} ▾`;
+            // Header & Caregiver Bar
+            const caregiverBar = document.getElementById('caregiver-bar');
+            if (state.users.length > 1) {
+                caregiverBar.classList.add('visible');
+                document.getElementById('bar-user-name').innerText = user;
+                document.getElementById('bar-logged-by').innerText = `${state.loggedBy} ▾`;
+            } else {
+                caregiverBar.classList.remove('visible');
+            }
+
             document.getElementById('lbl-round-tag').innerText = `Round ${activeRound}`;
 
-            // 2. Buttons labels
+            // Buttons
             document.getElementById('lbl-ibu-dose').innerText = `${userCfg.doseIbu} mg`;
             document.getElementById('lbl-aceta-dose').innerText = `${userCfg.doseAceta} mg`;
 
-            // 3. User Dock
+            // User Dock
             renderUserDock();
 
-            // 4. Filter logs for active user and active round
+            // Filter active user logs
             const userLogs = state.logs.filter(l => l.user === user && (l.round || 1) === activeRound);
 
-            // 5. Render History List
+            // History List
             const list = document.getElementById('log-list');
             list.innerHTML = '';
 
@@ -1483,7 +1526,7 @@
 
                     const isIbu = log.med === 'Ibuprofen';
                     const medClass = isIbu ? 'ibu' : 'aceta';
-                    const adminBy = log.loggedBy ? ` • by ${log.loggedBy}` : '';
+                    const adminBy = (state.users.length > 1 && log.loggedBy) ? ` • by ${log.loggedBy}` : '';
                     const pendingText = log.pending ? ' (saving...)' : '';
 
                     li.innerHTML = `
@@ -1502,10 +1545,10 @@
                 });
             }
 
-            // 6. Rolling 24-Hour Limits Calculation
+            // Rolling 24-Hour Limits
             calculate24hTotals(userLogs, userCfg);
 
-            // 7. Update Status & Live Countdown
+            // Live Countdown Status
             updateCountdown();
         }
 
@@ -1516,7 +1559,6 @@
             let ibuTotal = 0;
             let acetaTotal = 0;
 
-            // Rolling 24h filter
             userLogs.forEach(log => {
                 if (log.time >= oneDayAgo) {
                     const dose = log.dose || (log.med === 'Ibuprofen' ? userCfg.doseIbu : userCfg.doseAceta);
@@ -1562,12 +1604,12 @@
             const hintEl = document.getElementById('last-dose-hint');
 
             if (userLogs.length === 0) {
-                titleEl.innerText = 'Eligibility';
+                titleEl.innerText = 'Schedule Status';
                 timeEl.innerText = 'READY NOW';
                 timeEl.className = '';
                 recEl.className = 'recommendation-badge';
                 recEl.innerText = 'Start with either medication';
-                hintEl.innerText = 'Round 1 ready to start';
+                hintEl.innerText = 'Ready for dose 1';
                 return;
             }
 
@@ -1579,7 +1621,7 @@
             const nextDose = nextMed === 'Ibuprofen' ? userCfg.doseIbu : userCfg.doseAceta;
             const isIbu = nextMed === 'Ibuprofen';
 
-            hintEl.innerText = `Last dose: ${lastLog.med} (${lastLog.dose || (lastLog.med === 'Ibuprofen' ? userCfg.doseIbu : userCfg.doseAceta)}mg) at ${formatTime(lastLog.time)}`;
+            hintEl.innerText = `Last: ${lastLog.med} (${lastLog.dose || (lastLog.med === 'Ibuprofen' ? userCfg.doseIbu : userCfg.doseAceta)}mg) at ${formatTime(lastLog.time)}`;
 
             if (now >= nextTime) {
                 titleEl.innerText = `${user} is eligible now:`;
@@ -1614,7 +1656,6 @@
                 dock.appendChild(btn);
             });
 
-            // Add button
             const addBtn = document.createElement('button');
             addBtn.className = 'user-tab user-tab-add';
             addBtn.title = 'Add Person';
@@ -1623,7 +1664,7 @@
             dock.appendChild(addBtn);
         }
 
-        // --- SETTINGS MODAL HANDLERS ---
+        // --- SETTINGS MODAL ---
         function openSettingsModal() {
             haptic();
             const userCfg = getCurrentUserSettings();
@@ -1641,10 +1682,21 @@
             const linkNtfy = document.getElementById('link-ntfy-web');
             linkNtfy.href = `https://ntfy.sh/${encodeURIComponent(userCfg.ntfyTopic || '')}`;
 
+            // Show delete button only if more than 1 user profile exists
+            const btnDelete = document.getElementById('btn-delete-user');
+            if (state.users.length > 1) {
+                btnDelete.style.display = 'block';
+                btnDelete.innerText = `Delete Profile "${userCfg.user}"`;
+            } else {
+                btnDelete.style.display = 'none';
+            }
+
             document.getElementById('modal-settings').classList.add('active');
         }
 
         function closeSettingsModal() {
+            const sheet = document.getElementById('sheet-settings');
+            sheet.style.transform = '';
             document.getElementById('modal-settings').classList.remove('active');
         }
 
@@ -1672,7 +1724,6 @@
                 state.loggedBy = admin;
             }
 
-            // Push to backend queue
             state.queue.push({
                 action: 'saveSettings',
                 user: user,
@@ -1692,7 +1743,7 @@
             closeSettingsModal();
         }
 
-        // --- ADD USER MODAL HANDLERS ---
+        // --- ADD USER MODAL ---
         function openAddUserModal() {
             haptic();
             document.getElementById('new-user-name').value = '';
@@ -1700,6 +1751,8 @@
         }
 
         function closeAddUserModal() {
+            const sheet = document.getElementById('sheet-add-user');
+            sheet.style.transform = '';
             document.getElementById('modal-add-user').classList.remove('active');
         }
 
@@ -1738,7 +1791,6 @@
 
             state.currentUser = nameInput;
 
-            // Push to Google Sheets
             state.queue.push({
                 action: 'saveSettings',
                 user: nameInput,
@@ -1751,16 +1803,72 @@
             closeAddUserModal();
         }
 
+        // --- TOUCH DRAG-TO-DISMISS ENGINE ---
+        function setupDragToDismiss(sheetId, handleId, closeFn) {
+            const sheet = document.getElementById(sheetId);
+            const handle = document.getElementById(handleId);
+            if (!sheet || !handle) return;
+
+            let startY = 0;
+            let currentY = 0;
+            let isDragging = false;
+
+            const onStart = (clientY) => {
+                startY = clientY;
+                isDragging = true;
+                sheet.style.transition = 'none';
+            };
+
+            const onMove = (clientY) => {
+                if (!isDragging) return;
+                const deltaY = clientY - startY;
+                if (deltaY > 0) {
+                    sheet.style.transform = `translateY(${deltaY}px)`;
+                }
+            };
+
+            const onEnd = (clientY) => {
+                if (!isDragging) return;
+                isDragging = false;
+                sheet.style.transition = 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)';
+                const deltaY = clientY - startY;
+                if (deltaY > 90) {
+                    closeFn();
+                } else {
+                    sheet.style.transform = 'translateY(0)';
+                }
+            };
+
+            // Touch events
+            handle.addEventListener('touchstart', (e) => onStart(e.touches[0].clientY), { passive: true });
+            sheet.addEventListener('touchmove', (e) => onMove(e.touches[0].clientY), { passive: true });
+            sheet.addEventListener('touchend', (e) => onEnd(e.changedTouches[0].clientY), { passive: true });
+
+            // Mouse events for desktop
+            handle.addEventListener('mousedown', (e) => {
+                onStart(e.clientY);
+                const moveHandler = (ev) => onMove(ev.clientY);
+                const upHandler = (ev) => {
+                    onEnd(ev.clientY);
+                    window.removeEventListener('mousemove', moveHandler);
+                    window.removeEventListener('mouseup', upHandler);
+                };
+                window.addEventListener('mousemove', moveHandler);
+                window.addEventListener('mouseup', upHandler);
+            });
+        }
+
         function closeModalOnBackdrop(e, modalId) {
             if (e.target.id === modalId) {
-                document.getElementById(modalId).classList.remove('active');
+                if (modalId === 'modal-settings') closeSettingsModal();
+                if (modalId === 'modal-add-user') closeAddUserModal();
             }
         }
 
         // --- FORMATTERS & HELPERS ---
         function haptic() {
             if (navigator.vibrate) {
-                try { navigator.vibrate(12); } catch (e) {}
+                try { navigator.vibrate(10); } catch (e) {}
             }
         }
 
