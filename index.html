@@ -1147,20 +1147,34 @@
             }
         }
 
-        // --- STORAGE ---
+        // --- STORAGE (Persistent & Backward Compatible) ---
         function loadFromStorage() {
             try {
-                const cachedLogs = localStorage.getItem('pain_logs_v3');
-                const cachedQueue = localStorage.getItem('pain_queue_v3');
-                const cachedSettings = localStorage.getItem('pain_settings_v3');
-                const cachedUsers = localStorage.getItem('pain_users_v3');
+                // Check permanent keys first, then fall back to versioned keys from past iterations
+                const cachedSettings = localStorage.getItem('pain_settings') || 
+                                       localStorage.getItem('pain_settings_v3') || 
+                                       localStorage.getItem('pain_settings_v2') || 
+                                       localStorage.getItem('pain_settings_v1');
+
+                const cachedLogs = localStorage.getItem('pain_logs') || 
+                                   localStorage.getItem('pain_logs_v3') || 
+                                   localStorage.getItem('pain_logs_v2');
+
+                const cachedUsers = localStorage.getItem('pain_users') || 
+                                    localStorage.getItem('pain_users_v3') || 
+                                    localStorage.getItem('pain_users_v2');
+
+                const cachedQueue = localStorage.getItem('pain_queue') || 
+                                    localStorage.getItem('pain_queue_v3') || 
+                                    localStorage.getItem('pain_queue_v2');
+
                 const cachedActiveUser = localStorage.getItem('pain_active_user');
                 const cachedAdmin = localStorage.getItem('pain_logged_by');
 
+                if (cachedSettings) state.settings = Object.assign({}, state.settings, JSON.parse(cachedSettings));
                 if (cachedLogs) state.logs = JSON.parse(cachedLogs);
-                if (cachedQueue) state.queue = JSON.parse(cachedQueue);
-                if (cachedSettings) state.settings = JSON.parse(cachedSettings);
                 if (cachedUsers) state.users = JSON.parse(cachedUsers);
+                if (cachedQueue) state.queue = JSON.parse(cachedQueue);
 
                 // Clean legacy seed if "Wife" exists without logs
                 if (state.users && state.users.includes('Wife')) {
@@ -1178,6 +1192,9 @@
                 }
 
                 if (cachedAdmin) state.loggedBy = cachedAdmin;
+
+                // Migrate forward to permanent keys immediately
+                saveToStorage();
             } catch (e) {
                 console.warn('Cache load error:', e);
             }
@@ -1185,10 +1202,11 @@
 
         function saveToStorage() {
             try {
-                localStorage.setItem('pain_logs_v3', JSON.stringify(state.logs));
-                localStorage.setItem('pain_queue_v3', JSON.stringify(state.queue));
-                localStorage.setItem('pain_settings_v3', JSON.stringify(state.settings));
-                localStorage.setItem('pain_users_v3', JSON.stringify(state.users));
+                // Save to permanent unversioned keys so future app updates NEVER reset user data
+                localStorage.setItem('pain_settings', JSON.stringify(state.settings));
+                localStorage.setItem('pain_logs', JSON.stringify(state.logs));
+                localStorage.setItem('pain_users', JSON.stringify(state.users));
+                localStorage.setItem('pain_queue', JSON.stringify(state.queue));
                 localStorage.setItem('pain_active_user', state.currentUser);
                 localStorage.setItem('pain_logged_by', state.loggedBy);
             } catch (e) {
