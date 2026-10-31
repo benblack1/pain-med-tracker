@@ -1,5 +1,5 @@
-// UPDATED: Version v2
-const CACHE_NAME = 'pain-tracker-v5'; 
+// Pain Med Sync Service Worker v6
+const CACHE_NAME = 'pain-tracker-v6'; 
 const ASSETS = [
   './',
   './index.html',
@@ -7,40 +7,53 @@ const ASSETS = [
   './icon.png'
 ];
 
-// Install: Cache new files
+// Install: Cache new files & activate immediately
 self.addEventListener('install', (event) => {
-  // Force this new service worker to become active immediately
   self.skipWaiting(); 
-  
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => cache.addAll(ASSETS))
   );
 });
 
-// Activate: Clean up old caches
+// Activate: Clean up old caches & claim clients
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keyList) => {
       return Promise.all(keyList.map((key) => {
         if (key !== CACHE_NAME) {
-          console.log('Removing old cache', key);
+          console.log('[SW] Purging old cache:', key);
           return caches.delete(key);
         }
       }));
     })
   );
-  // Tell the active service worker to take control of the page immediately
   self.clients.claim(); 
 });
 
-// Fetch: Serve from cache, but try to update in background
+// Fetch: Stale-while-revalidate for local assets, network-only for Google Script & ntfy
 self.addEventListener('fetch', (event) => {
+  const url = event.request.url;
+
+  // Don't intercept Google Apps Script or ntfy API requests
+  if (url.includes('script.google.com') || url.includes('ntfy.sh')) {
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request)
-      .then((response) => {
-        // Return cached hit if found, otherwise network
-        return response || fetch(event.request);
+      .then((cachedResponse) => {
+        const fetchPromise = fetch(event.request).then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
+          }
+          return networkResponse;
+        }).catch(() => cachedResponse);
+
+        return cachedResponse || fetchPromise;
       })
   );
 });
